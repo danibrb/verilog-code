@@ -1,0 +1,25 @@
+# Build and simulation output
+build/
+*.vvp
+*.vcd
+*.fst
+*.lxt
+*.lxt2
+
+# GTKWave session state (optional: remove these lines if you want to
+# version saved signal layouts)
+*.gtkw
+*.sav
+
+# Generated file list
+build/sources.f
+
+# VS Code: share only the project configuration
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+
+# Operating system files
+Thumbs.db
+Desktop.ini
+.DS_Store
