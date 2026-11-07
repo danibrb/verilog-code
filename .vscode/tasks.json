@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "options": {
+    "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] }
+  },
+  "tasks": [
+    {
+      "label": "HDL: prepara build",
+      "type": "shell",
+      "command": "New-Item -ItemType Directory -Force -Path build | Out-Null",
+      "problemMatcher": []
+    },
+    {
+      "label": "HDL: compila",
+      "type": "shell",
+      "command": "iverilog -g2005 -Wall -o build/sim.vvp -c sources.f '${file}'",
+      "dependsOn": ["HDL: prepara build"],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": [
+        {
+          "owner": "iverilog",
+          "fileLocation": ["autoDetect", "${workspaceFolder}"],
+          "pattern": {
+            "regexp": "^(.+):([0-9]+): (error|warning): (.*)$",
+            "file": 1, "line": 2, "severity": 3, "message": 4
+          }
+        },
+        {
+          "owner": "iverilog-syntax",
+          "severity": "error",
+          "fileLocation": ["autoDetect", "${workspaceFolder}"],
+          "pattern": {
+            "regexp": "^(.+):([0-9]+): (syntax error)$",
+            "file": 1, "line": 2, "message": 3
+          }
+        }
+      ]
+    },
+    {
+      "label": "HDL: simula",
+      "type": "shell",
+      "command": "vvp build/sim.vvp",
+      "dependsOn": ["HDL: compila"],
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "HDL: apri onde",
+      "type": "shell",
+      "command": "Start-Process gtkwave -ArgumentList 'build/dump.vcd'",
+      "problemMatcher": []
+    },
+    {
+      "label": "HDL: simula e apri onde",
+      "dependsOn": ["HDL: simula", "HDL: apri onde"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "HDL: pulisci build",
+      "type": "shell",
+      "command": "Remove-Item -Recurse -Force -ErrorAction SilentlyContinue build/*",
+      "problemMatcher": []
+    }
+  ]
+}

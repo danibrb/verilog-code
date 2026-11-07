@@ -1,0 +1,5 @@
+{
+  "verilog.linting.linter": "iverilog",
+  "verilog.linting.iverilog.arguments": "-g2005 -Wall -y src",
+  "files.insertFinalNewline": true
+}
